@@ -132,6 +132,19 @@ describe Failurous::FailNotification do
         field_count(@notification, :summary).should == 2
       end
       
+      context "ambiguous field placement" do
+        it "should raise ArgumentError if both :above and :below is specified" do
+          lambda {
+            @notification.add_field(:summary, :type, "RuntimeError", {}, {:below => :a, :above => :b})
+          }.should raise_error(ArgumentError)
+        end
+        
+        it "should not add the field" do
+          lambda {
+            @notification.add_field(:summary, :type, "RuntimeError", {}, {:below => :a, :above => :b}) rescue nil
+          }.should_not change { field_count(@notification, :summary) }
+        end
+      end
     end
   end
   

@@ -96,6 +96,10 @@ module Failurous
     #
     # @return [FailNotification] self
     def add_field(section_name, field_name, field_value, field_options = {}, placement = {})
+      if placement[:above] and placement[:below]
+        raise ArgumentError.new("Ambiguous placement options: only one of :below or :above can be specified")
+      end
+      
       field   = [ field_name, field_value, field_options ]
       section = find_section(section_name)
       
