@@ -96,7 +96,10 @@ module Failurous
     #
     # @return [FailNotification] self
     def add_field(section_name, field_name, field_value, field_options = {}, placement = {})
-
+      section = [section_name, [ [ field_name, field_value, field_options ] ] ]
+      @attributes[:data] << section
+      
+      self
     end
 
 

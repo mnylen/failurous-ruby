@@ -42,4 +42,20 @@ describe Failurous::FailNotification do
       lambda { @notification.location = "custom location " }.should change(@notification, :location_set?).from(false).to(true)
     end
   end
+  
+  
+  describe "add_field" do
+    before(:each) do
+      @notification = Failurous::FailNotification.new
+    end
+    
+    it "should create section" do
+      @notification.add_field(:summary, :type, "NoMethodError")
+      @notification.should have_section(:summary)
+    end
+    
+    it "should return self" do
+      @notification.add_field(:summary, :type, "NoMethodError").should == @notification
+    end
+  end
 end
