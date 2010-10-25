@@ -7,13 +7,17 @@ RSpec::Matchers.define :have_field do |section_name, field_name|
     @below = below
   end
   
+  chain :above do |above|
+    @above = above
+  end
+  
   chain :as_last_field do
     @last_field = true
   end
   
   match do |actual|
     section = find_section(actual, section_name)
-    field   = find_field(section, field_name, @below, @last_field) if section
+    field   = find_field(section, field_name, @below, @above, @last_field) if section
     
     result = !(field.nil?)
     result = (field[1] == @value) if (field and @value)
@@ -24,7 +28,8 @@ RSpec::Matchers.define :have_field do |section_name, field_name|
   failure_message_for_should do |actual|
     message = "expected that #{actual} has field #{field_name} in #{section_name}"
     message += " with value #{@value}" if @value
-    message += " before field #{@below}" if @below
+    message += " below field #{@below}" if @below
+    message += " above field #{@above}" if @above
     message += " as last field" if @last_field
     
     message
@@ -38,7 +43,7 @@ RSpec::Matchers.define :have_field do |section_name, field_name|
     notification.attributes[:data].detect { |section| section[0] == section_name }
   end
   
-  def find_field(section, field_name, below, last_field)
+  def find_field(section, field_name, below, above, last_field)
     if last_field
       if section[1].last[0] == field_name
         return section[1].last
@@ -55,6 +60,8 @@ RSpec::Matchers.define :have_field do |section_name, field_name|
       if field[0] == field_name
         if below
           return (previous_field and previous_field[0] == below) ? field : nil
+        elsif above
+          return (section[1][i+1][0] == above) ? field : nil
         else
           return field
         end
