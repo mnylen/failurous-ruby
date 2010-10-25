@@ -201,22 +201,51 @@ module Failurous
       end
 
       def insert_or_replace_field(section, field, placement)
-        unless replace_field(section, field)
-          section[1] << field
+        if placement[:below] or placement[:above]
+          remove_field(section, field[0])
+          
+          insert_field_below(placement[:below], section, field) if placement[:below] 
+        else
+          unless replace_field(section, field)
+            section[1] << field
+          end
         end
+      end
+      
+      def insert_field_below(field_name, section, new_field)
+        i = field_index(section, field_name)
+        
+        if i
+          section[1].insert(i+1, new_field)
+        else
+          section[1] << new_field
+        end
+      end
+      
+      def remove_field(section, field_name)
+        i = field_index(section, field_name)
+        section.delete_at(i) if i
       end
 
       def replace_field(section, field)
+        i = field_index(section, field[0])
+        
+        if i
+          section[1][i] = field
+          true
+        else
+          false
+        end
+      end
+      
+      def field_index(section, field_name)
         section[1].size.times do |i|
-          previous_field = section[1][i]
-
-          if previous_field[0] == field[0]
-            section[1][i] = field
-            return true
+          if section[1][i][0] == field_name
+            return i
           end
         end
-
-        false
+        
+        nil
       end
   end
 end
