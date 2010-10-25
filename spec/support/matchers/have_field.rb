@@ -3,6 +3,10 @@ RSpec::Matchers.define :have_field do |section_name, field_name|
     @value = value
   end
   
+  chain :with_options do |options|
+    @options = options
+  end
+  
   chain :below do |below|
     @below = below
   end
@@ -22,16 +26,26 @@ RSpec::Matchers.define :have_field do |section_name, field_name|
     result = !(field.nil?)
     result = (field[1] == @value) if (field and @value)
     
+    if @options and field
+      @options.each_pair do |key, value|
+        if field[2][key] != value
+          result = false
+          break
+        end
+      end
+    end
+    
     result
   end
 
   failure_message_for_should do |actual|
     message = "expected that #{actual} has field #{field_name} in #{section_name}"
     message += " with value #{@value}" if @value
+    message += " and with options #{@options.inspect}" if @options
     message += " below field #{@below}" if @below
     message += " above field #{@above}" if @above
     message += " as last field" if @last_field
-    
+
     message
   end
 

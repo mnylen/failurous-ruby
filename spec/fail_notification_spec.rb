@@ -148,6 +148,78 @@ describe Failurous::FailNotification do
     end
   end
   
+  describe "fill_from_exception" do
+    before(:each) do
+      @error = RuntimeError.new("tl;dr")
+      @error.stub!(:backtrace).and_return(['a', 'b', 'c'])
+      
+      @notification = Failurous::FailNotification.new()
+      @notification.fill_from_exception(@error)
+    end
+    
+    it "should set the title as 'type: message'" do
+      @notification.title.should == "RuntimeError: tl;dr"
+    end
+    
+    it "should set the location as the topmost line in backtrace" do
+      @notification.location.should == "a"
+    end
+    
+    it "should use location in checksum" do
+      @notification.use_location_in_checksum.should == true
+    end
+    
+    it "should not use title in checksum" do
+      @notification.use_title_in_checksum.should == false
+    end
+    
+    it "should not override previously set title" do
+      @notification = Failurous::FailNotification.new()
+      @notification.title = "asdf"
+      @notification.fill_from_exception(@error)
+      @notification.title.should == "asdf"
+    end
+    
+    it "should not override setting for using title in checksum" do
+      @notification = Failurous::FailNotification.new()
+      @notification.use_title_in_checksum = true
+      @notification.fill_from_exception(@error)
+      @notification.use_title_in_checksum.should == true
+    end
+    
+    it "should not override previously set location" do
+      @notification = Failurous::FailNotification.new
+      @notification.location = "my own location"
+      @notification.fill_from_exception(@error)
+      @notification.location.should == "my own location"  
+    end
+    
+    it "should create section 'Summary'" do
+      @notification.should have_section(:summary)
+    end
+    
+    context "section summary" do
+      subject { @notification }
+      
+      it { should have_field(:summary, :type).with_value("RuntimeError").with_options(:use_in_checksum => true) }
+      
+      it { should have_field(:summary, :message).with_value("tl;dr").with_options(:use_in_checksum => false) }
+      
+      it { should have_field(:summary, :topmost_line_in_backtrace).with_value("a").with_options(:use_in_checksum => true) }  
+    end 
+    
+    
+    it "should create section 'Details'" do
+      @notification.should have_section(:details)
+    end
+    
+    context "details" do
+      subject { @notification }
+      
+      it { should have_field(:details, :full_backtrace).with_value(@error.backtrace.join('\n')).with_options(:use_in_checksum => false) }
+    end
+  end
+  
   private
   
     def section_count(notification)

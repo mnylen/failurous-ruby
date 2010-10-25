@@ -55,7 +55,18 @@ module Failurous
     # @param exception [Exception] the exception raised 
     # @return [FailNotification] self
     def fill_from_exception(exception)
-
+      self.title = "#{exception.class}: #{exception.message}" unless self.title
+      unless location_set?
+        self.location = exception.backtrace[0]
+        self.use_location_in_checksum = true
+      end
+      
+      self.add_field(:summary, :type, exception.class.to_s, :use_in_checksum => true).
+        add_field(:summary, :message, exception.message, :use_in_checksum => false).
+        add_field(:summary, :topmost_line_in_backtrace, exception.backtrace[0], :use_in_checksum => true).
+        add_field(:details, :full_backtrace, exception.backtrace.join('\n'), :use_in_checksum => false)
+        
+      self
     end
 
 
