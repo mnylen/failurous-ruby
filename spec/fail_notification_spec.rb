@@ -105,6 +105,34 @@ describe Failurous::FailNotification do
         field_count(@notification, :summary).should == 3
       end
     end
+    
+    
+    context "field placement :above" do
+      before(:each) do
+        @notification.add_field(:summary, :message, "Lorem ipsum")
+      end
+      
+      it "should add the field above the specified field" do
+        @notification.add_field(:summary, :type, "NoMethodError", {}, :above => :message)
+        @notification.should have_field(:summary, :type).above(:message)
+      end
+      
+      it "should append field to end of the section if the specified field does not exist" do
+        @notification.add_field(:summary, :type, "NoMethodError", {}, :above => :my_imaginary_field)  
+        @notification.should have_field(:summary, :type).as_last_field
+      end
+      
+      
+      it "should replace already existing field and move it" do
+        @notification.add_field(:summary, :type, "NoMethodError")
+        @notification.should have_field(:summary, :type).as_last_field
+        
+        @notification.add_field(:summary, :type, "RuntimeError", {}, :above => :message)
+        @notification.should have_field(:summary, :type).with_value("RuntimeError").above(:message)
+        field_count(@notification, :summary).should == 2
+      end
+      
+    end
   end
   
   private

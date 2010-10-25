@@ -203,7 +203,8 @@ module Failurous
       def insert_or_replace_field(section, field, placement)
         if placement[:below] or placement[:above]
           remove_field(section, field[0])
-          insert_field_below(placement[:below], section, field) if placement[:below] 
+          insert_field_below(placement[:below], section, field) if placement[:below]
+          insert_field_above(placement[:above], section, field) if placement[:above]
         else
           unless replace_field(section, field)
             section[1] << field
@@ -216,6 +217,16 @@ module Failurous
         
         if i
           section[1].insert(i+1, new_field)
+        else
+          section[1] << new_field
+        end
+      end
+      
+      def insert_field_above(field_name, section, new_field)
+        i = field_index(section, field_name)
+        
+        if i
+          section[1].insert(i, new_field)
         else
           section[1] << new_field
         end
