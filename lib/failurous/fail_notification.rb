@@ -85,7 +85,6 @@ module Failurous
     # are given, the field will be appended to the end of the section. Supported options are:
     # * _:below_ - the field should be placed below the specified field (e.g. *:below* => *:type*)
     # * _:above_ - the field should be placed above the specified field (e.g. *:after* => *:message*)
-    # You can use _:first_ and _:last_ to place the field below or above the first or last field in the section.
     # Currently combining _:below_ and _:above_ is not supported.
     #
     # @param section_name [Symbol] name of the section
