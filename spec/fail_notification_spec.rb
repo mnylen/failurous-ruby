@@ -81,34 +81,30 @@ describe Failurous::FailNotification do
     
     
     context "field placement :below" do
-      it "should add the field below the specified field" do
+      before(:each) do
         @notification.add_field(:summary, :message, "Lorem ipsum")
         @notification.add_field(:summary, :top_of_backtrace, "xyz.rb:39:in `xyz'")
+      end
+      
+      it "should add the field below the specified field" do
         @notification.add_field(:summary, :type, "NoMethodError", {}, :below => :message)
-        
         @notification.should have_field(:summary, :type).below(:message)
       end
       
       it "should append field to end of the section if the specified field does not exist" do
-        @notification.add_field(:summary, :message, "Lorem ipsum")
-        @notification.add_field(:summary, :top_of_backtrace, "xyz.rb:39:in `xyz'")
-        @notification.add_field(:summary, :type, "NoMethodError", {}, :below => :my_imaginary_field)
-        
+        @notification.add_field(:summary, :type, "NoMethodError", {}, :below => :my_imaginary_field)  
         @notification.should have_field(:summary, :type).as_last_field
       end
       
       it "should replace already existing field and move it" do
         @notification.add_field(:summary, :type, "NoMethodError")
-        @notification.add_field(:summary, :message, "Lorem ipsum")
-        @notification.add_field(:summary, :top_of_backtrace, "xyz.rb:39:in `xyz'")
-        @notification.should have_field(:summary, :top_of_backtrace).as_last_field
+        @notification.should have_field(:summary, :type).as_last_field
         
-        @notification.add_field(:summary, :top_of_backtrace, "abc", :below => :type)
-        @notification.should have_field(:summary, :top_of_backtrace).as_last_field
+        @notification.add_field(:summary, :type, "RuntimeError", {}, :below => :message)
+        @notification.should have_field(:summary, :type).below(:message)
         field_count(@notification, :summary).should == 3
       end
     end
-    
   end
   
   private

@@ -203,7 +203,6 @@ module Failurous
       def insert_or_replace_field(section, field, placement)
         if placement[:below] or placement[:above]
           remove_field(section, field[0])
-          
           insert_field_below(placement[:below], section, field) if placement[:below] 
         else
           unless replace_field(section, field)
@@ -224,7 +223,7 @@ module Failurous
       
       def remove_field(section, field_name)
         i = field_index(section, field_name)
-        section.delete_at(i) if i
+        section[1].delete_at(i) if i
       end
 
       def replace_field(section, field)
