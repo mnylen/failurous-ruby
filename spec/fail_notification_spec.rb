@@ -96,6 +96,17 @@ describe Failurous::FailNotification do
         
         @notification.should have_field(:summary, :type).as_last_field
       end
+      
+      it "should replace already existing field and move it" do
+        @notification.add_field(:summary, :type, "NoMethodError")
+        @notification.add_field(:summary, :message, "Lorem ipsum")
+        @notification.add_field(:summary, :top_of_backtrace, "xyz.rb:39:in `xyz'")
+        @notification.should have_field(:summary, :top_of_backtrace).as_last_field
+        
+        @notification.add_field(:summary, :top_of_backtrace, "abc", :below => :type)
+        @notification.should have_field(:summary, :top_of_backtrace).as_last_field
+        field_count(@notification, :summary).should == 3
+      end
     end
     
   end
