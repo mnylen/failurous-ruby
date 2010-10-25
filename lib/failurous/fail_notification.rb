@@ -16,11 +16,13 @@ module Failurous
     def initialize(title = nil, exception = nil, object = nil)
       @attributes = {
         :title => title,
-        :location => nil,
+        :location => caller[0],
         :use_title_in_checksum => false,
         :use_location_in_checksum => false,
         :data => []
       }
+      
+      @location_set = false
     end
 
     # Determines whether FailMiddleware should ignore _exception_ in _object_.
@@ -117,7 +119,7 @@ module Failurous
     #
     # @return location
     def location
-
+      @attributes[:location]
     end
 
     # Sets the location to the specified location. Will override any previous
@@ -127,7 +129,13 @@ module Failurous
     # @see #use_location_in_checksum
     # @see #use_location_in_checksum=
     def location=(location)
-
+      @location_set = true
+      @attributes[:location] = location
+    end
+    
+    # @return [Boolean] *true* if the location was set using {#location=}, otherwise *false*
+    def location_set?
+      @location_set
     end
 
     # Gets whether _location_ should be used when combining fails. Defaults to *false*
