@@ -155,14 +155,14 @@ module Failurous
     #
     # @return [Boolean] *true* if location should be used when combining fails; *false* otherwise
     def use_location_in_checksum
-
+      @attributes[:use_location_in_checksum]
     end
 
     # Sets whether _location_ should be used when combining fails. 
     #
     # @param value [Boolean] *true* if location should be used when combining fails; *false* otherwise
     def use_location_in_checksum=(value)
-
+      @attributes[:use_location_in_checksum] = value
     end
 
 
@@ -186,14 +186,14 @@ module Failurous
     #
     # @return [Boolean] *true* if title should be used when combining fails; *false* otherwise
     def use_title_in_checksum
-
+      @attributes[:use_title_in_checksum]
     end
 
     # Sets whether _title_ should be used when combining fails. 
     #
     # @param value [Boolean] *true* if title should be used when combining fails; *false* otherwise
     def use_title_in_checksum=(value)
-
+      @attributes[:use_title_in_checksum] = value
     end
     
     
