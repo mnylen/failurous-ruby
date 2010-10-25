@@ -23,6 +23,8 @@ module Failurous
       }
       
       @location_set = false
+      fill_from_exception(exception) if exception
+      fill_from_object(object) if object
     end
 
     # Determines whether FailMiddleware should ignore _exception_ in _object_.
@@ -76,7 +78,7 @@ module Failurous
     # @param object [Object] the object to fill from
     # @return [FailNotification] self
     def fill_from_object(object)
-
+      self
     end
 
     

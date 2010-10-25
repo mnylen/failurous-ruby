@@ -220,6 +220,13 @@ describe Failurous::FailNotification do
     end
   end
   
+  
+  describe "initializer" do
+    it "should use the title given as first parameter" do
+      Failurous::FailNotification.new("My title").title.should == "My title"
+    end
+  end
+  
   private
   
     def section_count(notification)
