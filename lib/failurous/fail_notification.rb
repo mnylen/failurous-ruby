@@ -1,6 +1,7 @@
 module Failurous
   class FailNotification
-
+    attr_accessor :attributes
+    
     # Creates a new FailNotification using the specified title. The notification
     # will be filled with details from the exception and object, if they are given.
     #
@@ -13,7 +14,13 @@ module Failurous
     # @see FailNotification#fill_from_exception
     # @see FailNotification#fill_from_object
     def initialize(title = nil, exception = nil, object = nil)
-
+      @attributes = {
+        :title => title,
+        :location => nil,
+        :use_title_in_checksum => false,
+        :use_location_in_checksum => false,
+        :data => []
+      }
     end
 
     # Determines whether FailMiddleware should ignore _exception_ in _object_.
@@ -142,7 +149,7 @@ module Failurous
     #
     # @return title 
     def title 
-
+      @attributes[:title]
     end
 
     # Sets the title to specified title. Will override any previous value.
@@ -151,7 +158,7 @@ module Failurous
     # @see #use_title_in_checksum
     # @see #use_title_in_checksum=
     def title=(title)
-
+      @attributes[:title] = title
     end
 
     # Gets whether _title_ should be used when combining fails. Defaults to *false*
