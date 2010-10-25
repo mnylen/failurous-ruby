@@ -54,8 +54,40 @@ describe Failurous::FailNotification do
       @notification.should have_section(:summary)
     end
     
+    it "should not create a new section if the section already exists" do
+      2.times do
+        @notification.add_field(:summary, :type, "NoMethodError")
+      end
+      
+      section_count(@notification).should == 1
+    end
+    
+    it "should add the field to the section" do
+      @notification.add_field(:summary, :type, "NoMethodError")
+      @notification.should have_field(:summary, :type).with_value("NoMethodError")
+    end
+    
+    it "should replace previous field with the same name" do
+      @notification.add_field(:summary, :type, "NoMethodError")
+      @notification.add_field(:summary, :type, "RuntimeError")
+      
+      field_count(@notification, :summary).should == 1
+      @notification.should have_field(:summary, :type).with_value("RuntimeError")
+    end
+    
     it "should return self" do
       @notification.add_field(:summary, :type, "NoMethodError").should == @notification
     end
   end
+  
+  private
+  
+    def section_count(notification)
+      notification.attributes[:data].size
+    end
+    
+    def field_count(notification, section_name)
+      section = notification.attributes[:data].detect { |section| section[0] == section_name }
+      section ? section[1].size : 0
+    end
 end

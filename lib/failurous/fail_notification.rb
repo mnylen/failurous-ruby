@@ -96,13 +96,20 @@ module Failurous
     #
     # @return [FailNotification] self
     def add_field(section_name, field_name, field_value, field_options = {}, placement = {})
-      section = [section_name, [ [ field_name, field_value, field_options ] ] ]
-      @attributes[:data] << section
+      field   = [ field_name, field_value, field_options ]
+      section = find_section(section_name)
+      
+      unless section
+        section = [section_name, [ ] ]
+        @attributes[:data] << section
+      end
+      
+      insert_or_replace_field(section, field, placement)
       
       self
     end
 
-
+    
     # Moves the named section inside the notification to either below another or
     # above another section.
     #
@@ -185,5 +192,31 @@ module Failurous
     def use_title_in_checksum=(value)
 
     end
+    
+    
+    private
+    
+      def find_section(section_name)
+        @attributes[:data].detect { |section| section[0] == section_name }
+      end
+
+      def insert_or_replace_field(section, field, placement)
+        unless replace_field(section, field)
+          section[1] << field
+        end
+      end
+
+      def replace_field(section, field)
+        section[1].size.times do |i|
+          previous_field = section[1][i]
+
+          if previous_field[0] == field[0]
+            section[1][i] = field
+            return true
+          end
+        end
+
+        false
+      end
   end
 end
