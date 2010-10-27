@@ -4,6 +4,7 @@ gem "json"
 
 group :development do
   gem "yard"
+  gem "jeweler"
 end
 
 group :test do
