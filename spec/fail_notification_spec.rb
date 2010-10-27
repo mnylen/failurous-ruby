@@ -220,6 +220,15 @@ describe Failurous::FailNotification do
     end
   end
   
+  describe "send" do
+    it "should send the fail using FailNotifier" do
+      notification = Failurous::FailNotification.new()
+      Failurous::FailNotifier.should_receive(:send).with(notification)
+      
+      notification.send
+    end
+  end
+  
   
   describe "initializer" do
     it "should use the title given as first parameter" do
