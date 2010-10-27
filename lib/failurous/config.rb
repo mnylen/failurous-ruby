@@ -1,6 +1,7 @@
 module Failurous
   class Config
     class << self
+      attr_accessor :api_key
       attr_accessor :server_name
       attr_accessor :server_port
       attr_accessor :send_timeout
