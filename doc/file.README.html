@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Documentation by YARD 0.6.1</title>
+<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html" title="Index">Index</a> &raquo; 
+    <span class="title">File: README</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><div id='filecontents'><h1>failurous-ruby</h1>
+
+<p>failurous-ruby is a Ruby client library used for sending fail notifications to
+Failurous (see http://github.com/mnylen/failurous).</p>
+
+<h2>Installation</h2>
+
+<p>TBD</p>
+
+<h2>Configuration</h2>
+
+<p>To start using the client, it must be configured with the address and port of the Failurous
+server and the API key for the project it's used in.</p>
+
+<p>This can be achieved by calling <code>Failurous.configure</code>:</p>
+
+<pre class="code"><span class='Failurous constant id'>Failurous</span><span class='dot token'>.</span><span class='configure identifier id'>configure</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='config identifier id'>config</span><span class='bitor op'>|</span>
+  <span class='config identifier id'>config</span><span class='dot token'>.</span><span class='server_name identifier id'>server_name</span> <span class='assign token'>=</span> <span class='string val'>&quot;failurous.mycompany.com&quot;</span>
+  <span class='config identifier id'>config</span><span class='dot token'>.</span><span class='server_port identifier id'>server_port</span> <span class='assign token'>=</span> <span class='integer val'>443</span>
+  <span class='config identifier id'>config</span><span class='dot token'>.</span><span class='api_key identifier id'>api_key</span>     <span class='assign token'>=</span> <span class='string val'>&quot;API KEY for your project&quot;</span>
+<span class='end end kw'>end</span>
+</pre>
+
+<p>You can also configure the following obligatory options:</p>
+
+<ul>
+<li><em>use_ssl</em> - set to <em>true</em> to encrypt notifications using SSL (defaults to <em>false</em>)</li>
+<li><em>send_timeout</em> - when Failurous server is slow to respond, this determines how long, in seconds, the notifier should wait before timing out (defaults to <em>2</em>)</li>
+<li><em>logger</em> - in case the notifications could not be sent, the logger is used to log the reason (by default, no logger is used)</li>
+</ul>
+
+
+<h2>Usage</h2>
+
+<p>Fail notifications are sent using <code>Failurous::FailNotifier.send(notification)</code> or by creating
+a notification using <code>Failurous::FailNotification.new</code> and calling <code>send</code> on it.</p>
+
+<p>Basic usage example:</p>
+
+<pre class="code"><span class='def def kw'>def</span> <span class='somemethod identifier id'>somemethod</span>
+  <span class='some identifier id'>some</span>
+  <span class='failing identifier id'>failing</span>
+  <span class='code identifier id'>code</span>
+<span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='ex identifier id'>ex</span>
+  <span class='Failurous constant id'>Failurous</span><span class='colon2 op'>::</span><span class='FailNotification constant id'>FailNotification</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='dstring node'>&quot;#{ex.class} in somemethod&quot;</span><span class='comma token'>,</span> <span class='ex identifier id'>ex</span><span class='rparen token'>)</span><span class='dot token'>.</span>
+    <span class='add_field identifier id'>add_field</span><span class='lparen token'>(</span><span class='symbol val'>:section</span><span class='comma token'>,</span> <span class='symbol val'>:field_name</span><span class='comma token'>,</span> <span class='string val'>&quot;field value&quot;</span><span class='comma token'>,</span> <span class='lbrace token'>{</span> <span class='symbol val'>:use_in_checksum</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='false false kw'>false</span><span class='comma token'>,</span> <span class='symbol val'>:humanize_field_name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span> <span class='rbrace token'>}</span><span class='rparen token'>)</span><span class='dot token'>.</span>
+    <span class='send identifier id'>send</span>
+<span class='end end kw'>end</span>
+</pre>
+
+<p>For full syntax, see the documentation for <code>FailNotification</code></p>
+
+<h2>Support &amp; Bug Reports</h2>
+
+<p>#failurous @ FreeNode</p>
+
+<p><a href="http://failurous.lighthouseapp.com/dashboard">Failurous Lighthouse</a></p>
+
+<h2>License</h2>
+
+<p>Copyright (c) 2010 Mikko Nylén, Tero Parviainen &amp; Antti Forsell</p>
+
+<p>See LICENSE</p></div></div>
+    
+    <div id="footer">
+  Generated on Wed Oct 27 19:30:21 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.1 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

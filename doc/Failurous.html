@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Module: Failurous</title>
+<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index (F)</a> &raquo; 
+    
+    
+    <span class="title">Failurous</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Module: Failurous
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">lib/failurous.rb<span class="defines">,<br />
+  lib/failurous/config.rb,<br /> lib/failurous/fail_notifier.rb,<br /> lib/failurous/fail_notification.rb</span>
+</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Defined Under Namespace</h2>
+<p class="children">
+   
+    
+   
+    
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Failurous/Config.html" title="Failurous::Config (class)">Config</a></span>, <span class='object_link'><a href="Failurous/FailNotification.html" title="Failurous::FailNotification (class)">FailNotification</a></span>, <span class='object_link'><a href="Failurous/FailNotifier.html" title="Failurous::FailNotifier (class)">FailNotifier</a></span>
+    
+  
+</p>
+
+  <h2>Constant Summary</h2>
+  
+    <dl class="constants">
+      
+        <dt id="ROOT-constant" class="">ROOT =
+          
+        </dt>
+        <dd><pre class="code"><span class='File constant id'>File</span><span class='dot token'>.</span><span class='dirname identifier id'>dirname</span><span class='lparen token'>(</span><span class='__FILE__ __file__ kw'>__FILE__</span><span class='rparen token'>)</span>
+</pre></dd>
+      
+    </dl>
+  
+
+
+
+  
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#configure-class_method" title="configure (class method)">+ (Object) <strong>configure</strong>(&amp;block) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="configure-class_method">
+  
+    + (<tt>Object</tt>) <strong>configure</strong>(&amp;block) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+12
+13
+14
+15
+16
+17
+18
+19</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/failurous.rb', line 12</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='configure identifier id'>configure</span><span class='lparen token'>(</span><span class='bitand op'>&amp;</span><span class='block identifier id'>block</span><span class='rparen token'>)</span>
+  <span class='block identifier id'>block</span><span class='dot token'>.</span><span class='call identifier id'>call</span><span class='lparen token'>(</span><span class='Config constant id'>Config</span><span class='rparen token'>)</span>
+  
+  <span class='comment val'># Initialize the HTTP object for sending fails</span>
+  <span class='FailNotifier constant id'>FailNotifier</span><span class='dot token'>.</span><span class='http identifier id'>http</span> <span class='assign token'>=</span> <span class='colon3 op'>::</span><span class='Net constant id'>Net</span><span class='colon2 op'>::</span><span class='HTTP constant id'>HTTP</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='Config constant id'>Config</span><span class='dot token'>.</span><span class='server_name identifier id'>server_name</span><span class='comma token'>,</span> <span class='Config constant id'>Config</span><span class='dot token'>.</span><span class='server_port identifier id'>server_port</span><span class='rparen token'>)</span>
+  <span class='FailNotifier constant id'>FailNotifier</span><span class='dot token'>.</span><span class='http identifier id'>http</span><span class='dot token'>.</span><span class='use_ssl identifier id'>use_ssl</span> <span class='assign token'>=</span> <span class='Config constant id'>Config</span><span class='dot token'>.</span><span class='use_ssl identifier id'>use_ssl</span> <span class='orop op'>||</span> <span class='false false kw'>false</span>
+  <span class='FailNotifier constant id'>FailNotifier</span><span class='dot token'>.</span><span class='http identifier id'>http</span><span class='dot token'>.</span><span class='open_timeout identifier id'>open_timeout</span> <span class='assign token'>=</span> <span class='Config constant id'>Config</span><span class='dot token'>.</span><span class='send_timeout identifier id'>send_timeout</span> <span class='orop op'>||</span> <span class='integer val'>2</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Wed Oct 27 19:30:21 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.1 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>
