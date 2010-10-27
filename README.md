@@ -5,7 +5,11 @@ Failurous (see http://github.com/mnylen/failurous).
 
 ## Installation
 
-TBD
+With Bundler, add this to your `Gemfile`:
+
+    gem 'failurous-ruby', :git => 'git://github.com/mnylen/failurous-ruby.git'
+
+Other ways: TBD after the gem is released
 
 ## Configuration
 
@@ -14,6 +18,8 @@ server and the API key for the project it's used in.
 
 This can be achieved by calling `Failurous.configure`:
 
+    require 'failurous'
+    
     Failurous.configure do |config|
       config.server_name = "failurous.mycompany.com"
       config.server_port = 443
