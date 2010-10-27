@@ -23,6 +23,7 @@ module Failurous
       }
       
       @location_set = false
+      self.use_title_in_checksum = true if title
       fill_from_exception(exception) if exception
       fill_from_object(object) if object
     end

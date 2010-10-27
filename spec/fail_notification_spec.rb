@@ -225,6 +225,16 @@ describe Failurous::FailNotification do
     it "should use the title given as first parameter" do
       Failurous::FailNotification.new("My title").title.should == "My title"
     end
+    
+    it "should use title in checksum when title was given" do
+      notification = Failurous::FailNotification.new("My title")
+      notification.use_title_in_checksum.should == true
+    end
+    
+    it "should not use title in checksum when no title was given" do
+      notification = Failurous::FailNotification.new(nil)
+      notification.use_title_in_checksum.should == false
+    end
   end
   
   private
