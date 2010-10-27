@@ -126,21 +126,6 @@ module Failurous
       self
     end
 
-    
-    # Moves the named section inside the notification to either below another or
-    # above another section.
-    #
-    # _placement_ can be one of the following:
-    # * _:below_ - the section should be moved below another section (e.g. *:below* => *:summary*)
-    # * _:above_ - the section should be moved above another section (e.g. *:above* => *:request*)
-    #
-    # @param section_name [Symbol] the section to move
-    # @param placement [Hash] placement option 
-    # @return [FailNotification] self
-    def move_section(section_name, placement) 
-
-    end
-
     # Gets the location, or the caller of {#initialize} when the location has not been
     # set by using {#location=}
     #
