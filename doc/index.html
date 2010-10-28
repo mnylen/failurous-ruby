@@ -48,7 +48,12 @@ Failurous (see http://github.com/mnylen/failurous).</p>
 
 <h2>Installation</h2>
 
-<p>TBD</p>
+<p>With Bundler, add this to your <code>Gemfile</code>:</p>
+
+<pre class="code"><span class='gem identifier id'>gem</span> <span class='string val'>'failurous-ruby'</span><span class='comma token'>,</span> <span class='symbol val'>:git</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'git://github.com/mnylen/failurous-ruby.git'</span>
+</pre>
+
+<p>Other ways: TBD after the gem is released</p>
 
 <h2>Configuration</h2>
 
@@ -57,7 +62,9 @@ server and the API key for the project it's used in.</p>
 
 <p>This can be achieved by calling <code>Failurous.configure</code>:</p>
 
-<pre class="code"><span class='Failurous constant id'>Failurous</span><span class='dot token'>.</span><span class='configure identifier id'>configure</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='config identifier id'>config</span><span class='bitor op'>|</span>
+<pre class="code"><span class='require identifier id'>require</span> <span class='string val'>'failurous'</span>
+
+<span class='Failurous constant id'>Failurous</span><span class='dot token'>.</span><span class='configure identifier id'>configure</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='config identifier id'>config</span><span class='bitor op'>|</span>
   <span class='config identifier id'>config</span><span class='dot token'>.</span><span class='server_name identifier id'>server_name</span> <span class='assign token'>=</span> <span class='string val'>&quot;failurous.mycompany.com&quot;</span>
   <span class='config identifier id'>config</span><span class='dot token'>.</span><span class='server_port identifier id'>server_port</span> <span class='assign token'>=</span> <span class='integer val'>443</span>
   <span class='config identifier id'>config</span><span class='dot token'>.</span><span class='api_key identifier id'>api_key</span>     <span class='assign token'>=</span> <span class='string val'>&quot;API KEY for your project&quot;</span>
@@ -75,8 +82,8 @@ server and the API key for the project it's used in.</p>
 
 <h2>Usage</h2>
 
-<p>Fail notifications are sent using <code>Failurous::FailNotifier.send(notification)</code> or by creating
-a notification using <code>Failurous::FailNotification.new</code> and calling <code>send</code> on it.</p>
+<p>Fail notifications are sent using <code>Failurous::FailNotifier.notify(notification)</code>. The notification
+can be created using <code>Failurous::FailNotification</code> class.</p>
 
 <p>Basic usage example:</p>
 
@@ -85,13 +92,25 @@ a notification using <code>Failurous::FailNotification.new</code> and calling <c
   <span class='failing identifier id'>failing</span>
   <span class='code identifier id'>code</span>
 <span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='ex identifier id'>ex</span>
-  <span class='Failurous constant id'>Failurous</span><span class='colon2 op'>::</span><span class='FailNotification constant id'>FailNotification</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='dstring node'>&quot;#{ex.class} in somemethod&quot;</span><span class='comma token'>,</span> <span class='ex identifier id'>ex</span><span class='rparen token'>)</span><span class='dot token'>.</span>
-    <span class='add_field identifier id'>add_field</span><span class='lparen token'>(</span><span class='symbol val'>:section</span><span class='comma token'>,</span> <span class='symbol val'>:field_name</span><span class='comma token'>,</span> <span class='string val'>&quot;field value&quot;</span><span class='comma token'>,</span> <span class='lbrace token'>{</span> <span class='symbol val'>:use_in_checksum</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='false false kw'>false</span><span class='comma token'>,</span> <span class='symbol val'>:humanize_field_name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span> <span class='rbrace token'>}</span><span class='rparen token'>)</span><span class='dot token'>.</span>
-    <span class='send identifier id'>send</span>
+  <span class='Failurous constant id'>Failurous</span><span class='colon2 op'>::</span><span class='FailNotifier constant id'>FailNotifier</span><span class='dot token'>.</span><span class='notify identifier id'>notify</span><span class='lparen token'>(</span><span class='Failurous constant id'>Failurous</span><span class='colon2 op'>::</span><span class='FailNotification constant id'>FailNotification</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='dstring node'>&quot;#{ex.class} in somemethod&quot;</span><span class='comma token'>,</span> <span class='ex identifier id'>ex</span><span class='rparen token'>)</span><span class='dot token'>.</span>
+    <span class='add_field identifier id'>add_field</span><span class='lparen token'>(</span><span class='symbol val'>:section</span><span class='comma token'>,</span> <span class='symbol val'>:field_name</span><span class='comma token'>,</span> <span class='string val'>&quot;field value&quot;</span><span class='comma token'>,</span> <span class='lbrace token'>{</span> <span class='symbol val'>:use_in_checksum</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='false false kw'>false</span><span class='comma token'>,</span> <span class='symbol val'>:humanize_field_name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span> <span class='rbrace token'>}</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
 <span class='end end kw'>end</span>
 </pre>
 
-<p>For full syntax, see the documentation for <code>FailNotification</code></p>
+<p>For full syntax for building notifications, see the documentation for <code>FailNotification</code></p>
+
+<p>Shorthands exists for sending notifications of exceptions:</p>
+
+<pre class="code"><span class='def def kw'>def</span> <span class='somemethod identifier id'>somemethod</span>
+  <span class='some identifier id'>some</span>
+  <span class='failing identifier id'>failing</span>
+  <span class='code identifier id'>code</span>
+<span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='ex identifier id'>ex</span>
+  <span class='Failurous constant id'>Failurous</span><span class='colon2 op'>::</span><span class='FailNotifier constant id'>FailNotifier</span><span class='dot token'>.</span><span class='notify identifier id'>notify</span><span class='lparen token'>(</span><span class='ex identifier id'>ex</span><span class='rparen token'>)</span>
+  <span class='comment val'># or Failurous::FailNotifier.notify(&quot;My custom message&quot;, ex)</span>
+  <span class='comment val'># or just Failurous::FailNotifier.notify(&quot;My message&quot;)</span>
+<span class='end end kw'>end</span>
+</pre>
 
 <h2>Support &amp; Bug Reports</h2>
 
@@ -106,7 +125,7 @@ a notification using <code>Failurous::FailNotification.new</code> and calling <c
 <p>See LICENSE</p></div></div>
     
     <div id="footer">
-  Generated on Wed Oct 27 19:30:21 2010 by 
+  Generated on Thu Oct 28 20:15:41 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.1 (ruby-1.8.7).
 </div>
