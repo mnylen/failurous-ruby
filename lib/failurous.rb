@@ -10,11 +10,9 @@ module Failurous
   
   
   def self.configure(&block)
-    block.call(Config)
+    config = Config.new
+    block.call(config)
     
-    # Initialize the HTTP object for sending fails
-    FailNotifier.http = ::Net::HTTP.new(Config.server_name, Config.server_port)
-    FailNotifier.http.use_ssl = Config.use_ssl || false
-    FailNotifier.http.open_timeout = Config.send_timeout || 2
+    FailNotifier.notifier = FailNotifier.new(config)
   end
 end

@@ -4,15 +4,38 @@ require 'json'
 
 module Failurous
   class FailNotifier
-    class << self
-      attr_accessor :http
+    def initialize(config, http = nil)
+      @config = config
       
-      def send(notification)
-        data = notification.attributes.to_json
-        self.http.post("/api/projects/#{Failurous::Config.api_key}/fails", data)
-      rescue
-        if Failurous::Config.logger
-          Failurous::Config.logger.warn("Could not send FailNotification to Failurous: #{$!.class}: #{$!.message}")
+      unless http
+        @http = ::Net::HTTP.new(config.server_name, config.server_port)
+        @http.use_ssl = config.use_ssl
+        @http.open_timeout = config.send_timeout
+      else
+        @http = http
+      end
+      
+      @path = "/api/projects/#{config.api_key}/fails"
+    end
+    
+    def notify(notification)
+      data = notification.attributes.to_json
+      @http.post(@path, data)
+    rescue
+      if @config.logger
+        @config.logger.warn("Could not send FailNotification to Failurous: #{$!.class}: #{$!.message}")
+      end
+    end
+    
+    
+    class << self
+      attr_accessor :notifier
+      
+      def notify(*args)
+        if notifier
+          self.notifier.notify(*args)
+        else
+          raise RuntimeError.new("No notifier configured. Please configure the notifier using Failurous.configure")
         end
       end
     end
