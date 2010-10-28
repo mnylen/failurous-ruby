@@ -185,11 +185,6 @@ module Failurous
       @attributes[:use_title_in_checksum] = value
     end
     
-    # Sends the notification using {FailNotifier}
-    def send
-      FailNotifier.send(self)
-    end
-    
     
     private
     
