@@ -3,11 +3,21 @@ require 'net/https'
 require 'json'
 
 module Failurous
+  
+  # FailNotifier is used for notifying Failurous about fails.
+  #
+  # To send a notification, use the {#notify} method.
+  #
+  # You can use {.notify} directly as a class level method once the notifier has been
+  # configured with {Failurous.configure}
   class FailNotifier
 
     class << self
+      # Notifier configured with {.configure}
       attr_accessor :notifier
-
+      
+      # Sends the notification using the configured notifier.
+      # @see #notify
       def notify(*args)
         if notifier
           self.notifier.send(:notify_with_caller, args, caller[0])
@@ -16,8 +26,12 @@ module Failurous
         end
       end
     end
-  
-  
+    
+    # Initializes the notifier with the specified configuration.
+    # Optionally takes preconfigured {Net::HTTP} instance for sending notifications.
+    #
+    # @param config [Failurous::Config] the configuration
+    # @param http [Net::HTTP] preconfigured HTTP instance for sending notifications
     def initialize(config, http = nil)
       @config = config
       
@@ -32,8 +46,15 @@ module Failurous
       @path = "/api/projects/#{config.api_key}/fails"
     end
     
-    def notify(*args)
-      notify_with_caller(args, caller[0])
+    # Sends a notification. The notification can be either:
+    # * {Failurous::FailNotification} instance
+    # * {Exception} - a new notification is built and sent with the exception details
+    # * {String} - a new notification will be built with the given title
+    # * {String}, {Exception} - a new notification will be built and sent with the given title and exception details
+    #
+    # @see FailNotification#initialize
+    def notify(*notification)
+      notify_with_caller(notification, caller[0])
     end
     
         

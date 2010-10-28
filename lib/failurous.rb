@@ -9,6 +9,8 @@ module Failurous
   autoload :FailNotifier,     "#{ROOT}/failurous/fail_notifier"
   
   
+  # Configures {FailNotifier}. The block will be called
+  # with a fresh {Config} instance.
   def self.configure(&block)
     config = Config.new
     block.call(config)
