@@ -34,8 +34,8 @@ You can also configure the following obligatory options:
 
 ## Usage
 
-Fail notifications are sent using `Failurous::FailNotifier.send(notification)` or by creating
-a notification using `Failurous::FailNotification.new` and calling `send` on it.
+Fail notifications are sent using `Failurous::FailNotifier.notify(notification)`. The notification
+can be created using `Failurous::FailNotification` class.
 
 Basic usage example:
 
@@ -44,12 +44,24 @@ Basic usage example:
       failing
       code
     rescue => ex
-      Failurous::FailNotification.new("#{ex.class} in somemethod", ex).
-        add_field(:section, :field_name, "field value", { :use_in_checksum => false, :humanize_field_name => true }).
-        send
+      Failurous::FailNotifier.notify(Failurous::FailNotification.new("#{ex.class} in somemethod", ex).
+        add_field(:section, :field_name, "field value", { :use_in_checksum => false, :humanize_field_name => true }))
     end
     
-For full syntax, see the documentation for `FailNotification`
+For full syntax for building notifications, see the documentation for `FailNotification`
+
+Shorthands exists for sending notifications of exceptions:
+
+    def somemethod
+      some
+      failing
+      code
+    rescue => ex
+      Failurous::FailNotifier.notify(ex)
+      # or Failurous::FailNotifier.notify("My custom message", ex)
+      # or just Failurous::FailNotifier.notify("My message")
+    end
+
 
 ## Support & Bug Reports
 
