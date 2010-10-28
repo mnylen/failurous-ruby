@@ -4,6 +4,20 @@ require 'json'
 
 module Failurous
   class FailNotifier
+
+    class << self
+      attr_accessor :notifier
+
+      def notify(*args)
+        if notifier
+          self.notifier.send(:notify_with_caller, args, caller[0])
+        else
+          raise RuntimeError.new("No notifier configured. Please configure the notifier using Failurous.configure")
+        end
+      end
+    end
+  
+  
     def initialize(config, http = nil)
       @config = config
       
@@ -22,27 +36,7 @@ module Failurous
       notify_with_caller(args, caller[0])
     end
     
-    def notify_with_caller(args, original_caller)
-      data = convert_args_to_json(args, original_caller)
-      @http.post(@path, data)
-    rescue
-      if @config.logger
-        @config.logger.warn("Could not send FailNotification to Failurous: #{$!.class}: #{$!.message}")
-      end
-    end
         
-    class << self
-      attr_accessor :notifier
-      
-      def notify(*args)
-        if notifier
-          self.notifier.notify_with_caller(args, caller[0])
-        else
-          raise RuntimeError.new("No notifier configured. Please configure the notifier using Failurous.configure")
-        end
-      end
-    end
-    
     private
     
       def convert_args_to_json(args, original_caller)
@@ -65,6 +59,16 @@ module Failurous
           end
           
           notification.attributes.to_json
+        end
+      end
+      
+      
+      def notify_with_caller(args, original_caller)
+        data = convert_args_to_json(args, original_caller)
+        @http.post(@path, data)
+      rescue
+        if @config.logger
+          @config.logger.warn("Could not send FailNotification to Failurous: #{$!.class}: #{$!.message}")
         end
       end
   end
