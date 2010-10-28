@@ -40,28 +40,32 @@ module Failurous
     private
     
       def convert_args_to_json(args, original_caller)
-        notification_exception_or_title = args.shift
-        exception = args.shift
-        
-        if notification_exception_or_title.kind_of?(FailNotification)
-          notification_exception_or_title.attributes.to_json
-        else
-          notification = nil
-          if notification_exception_or_title.kind_of?(Exception)
-            notification = Failurous::FailNotification.new(nil, notification_exception_or_title)
-          else
-            notification = Failurous::FailNotification.new(notification_exception_or_title, exception)
-          end
-          
-          if exception.nil?
-            notification.location = original_caller
-            notification.use_location_in_checksum = true
-          end
-          
-          notification.attributes.to_json
+        notification = case identify_args(args)
+          when :notification then args[0]
+          when :exception then FailNotification.new(nil, args[0])
+          when :exception_with_message then FailNotification.new(args[0], args[1])
+          when :message then FailNotification.new(args[0])
         end
+        
+        if identify_args(args) == :message
+          notification.location = original_caller unless notification.location_set?
+          notification.use_location_in_checksum = true unless notification.location_set?
+        end
+        
+        notification.attributes.to_json
       end
       
+      def identify_args(args)
+        if args[0].kind_of?(FailNotification)
+          return :notification
+        elsif args[0].kind_of?(Exception)
+          return :exception
+        elsif args[0].kind_of?(String) and args[1].kind_of?(Exception)
+          return :exception_with_message
+        else
+          return :message
+        end
+      end
       
       def notify_with_caller(args, original_caller)
         data = convert_args_to_json(args, original_caller)
