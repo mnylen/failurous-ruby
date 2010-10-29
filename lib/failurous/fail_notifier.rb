@@ -8,7 +8,7 @@ module Failurous
   #
   # To send a notification, use the {#notify} method.
   #
-  # You can use {.notify} directly as a class level method once the notifier has been
+  # You can use {Failurous.notify} directly as a class level method once the notifier has been
   # configured with {Failurous.configure}
   class FailNotifier
     class << self
