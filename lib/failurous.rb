@@ -17,4 +17,16 @@ module Failurous
     
     FailNotifier.notifier = FailNotifier.new(config)
   end
+  
+  
+  # Sends the notification using the configured notifier.
+  # @see FailNotifier#notify
+  # @see Failurous.configure
+  def self.notify(*args)
+    if notifier
+      FailNotifier.notifier.send(:notify_with_caller, args, caller[0])
+    else
+      raise RuntimeError.new("No notifier configured. Please configure the notifier using Failurous.configure")
+    end
+  end
 end

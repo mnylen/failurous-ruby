@@ -11,20 +11,9 @@ module Failurous
   # You can use {.notify} directly as a class level method once the notifier has been
   # configured with {Failurous.configure}
   class FailNotifier
-
     class << self
       # Notifier configured with {.configure}
       attr_accessor :notifier
-      
-      # Sends the notification using the configured notifier.
-      # @see #notify
-      def notify(*args)
-        if notifier
-          self.notifier.send(:notify_with_caller, args, caller[0])
-        else
-          raise RuntimeError.new("No notifier configured. Please configure the notifier using Failurous.configure")
-        end
-      end
     end
     
     # Initializes the notifier with the specified configuration.
