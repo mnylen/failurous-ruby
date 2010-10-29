@@ -57,9 +57,9 @@ Shorthands exists for sending notifications of exceptions:
       failing
       code
     rescue => ex
-      Failurous::FailNotifier.notify(ex)
-      # or Failurous::FailNotifier.notify("My custom message", ex)
-      # or just Failurous::FailNotifier.notify("My message")
+      Failurous.notify(ex)
+      # or Failurous.notify("My custom message", ex)
+      # or just Failurous.notify("My message")
     end
 
 
