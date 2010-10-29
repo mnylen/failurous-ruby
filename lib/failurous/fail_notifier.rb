@@ -60,7 +60,7 @@ module Failurous
         
     private
     
-      def convert_args_to_json(args, original_caller)
+      def create_notification(args, original_caller)
         notification = case identify_args(args)
           when :notification then args[0]
           when :exception then FailNotification.new(nil, args[0])
@@ -73,7 +73,7 @@ module Failurous
           notification.use_location_in_checksum = true unless notification.location_set?
         end
         
-        notification.attributes.to_json
+        notification
       end
       
       def identify_args(args)
@@ -89,8 +89,10 @@ module Failurous
       end
       
       def notify_with_caller(args, original_caller)
-        data = convert_args_to_json(args, original_caller)
-        @http.post(@path, data)
+        notification = create_notification(args, original_caller)
+        @http.post(@path, notification.attributes.to_json)
+        
+        notification
       rescue
         if @config.logger
           @config.logger.warn("Could not send FailNotification to Failurous: #{$!.class}: #{$!.message}")

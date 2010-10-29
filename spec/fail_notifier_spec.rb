@@ -9,19 +9,20 @@ describe Failurous::FailNotifier do
   
   before(:each) do
     @http = mock()
+    @http.stub!(:post)
     @config = Failurous::Config.new
     @config.api_key = "123"
     @logger = @config.logger = mock()
     @notifier = Failurous::FailNotifier.new(@config, @http)
   end
   
-  context "basic notifying" do
+  describe "#notify" do
     before(:each) do
       @notification = Failurous::FailNotification.new("My own notification")  
     end
     
-    it "should post the notification as JSON to given server address and port" do
-      @http.should_receive(:post).with("/api/projects/123/fails", @notification.attributes.to_json)
+    it "should post the notification using the given HTTP instance" do
+      @http.should_receive(:post)
       @notifier.notify(@notification)
     end
   
@@ -29,6 +30,10 @@ describe Failurous::FailNotifier do
       @http.should_receive(:post).and_raise(RuntimeError)
       @logger.should_receive(:warn)
       lambda { @notifier.notify(@notification) }.should_not raise_error
+    end
+    
+    it "should return the notification it sent" do
+      @notifier.notify(@notification).should == @notification
     end
   end
 end
