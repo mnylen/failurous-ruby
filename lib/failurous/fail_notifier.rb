@@ -41,6 +41,9 @@ module Failurous
     # * {String} - a new notification will be built with the given title
     # * {String}, {Exception} - a new notification will be built and sent with the given title and exception details
     #
+    # You can optionally append the object at the end of argument list to fill the notification
+    # details using information available from the object.
+    #
     # @see FailNotification#initialize
     def notify(*notification)
       notify_with_caller(notification, caller[0])
@@ -54,9 +57,9 @@ module Failurous
         
         notification = case identify_args(args)
           when :notification then args[0]
-          when :exception then notification_klass.new(nil, args[0])
-          when :exception_with_message then notification_klass.new(args[0], args[1])
-          when :message then notification_klass.new(args[0])
+          when :exception then notification_klass.new(nil, args[0], args[1])
+          when :exception_with_message then notification_klass.new(args[0], args[1], args[2])
+          when :message then notification_klass.new(args[0], nil, args[1])
         end
         
         if identify_args(args) == :message

@@ -39,6 +39,14 @@ describe Failurous::FailNotifier do
     
     
     context "shorthands" do
+      before(:each) do
+        @config.custom_notification = MyFailNotification
+      end
+      
+      after(:each) do
+        @config.custom_notification = nil
+      end
+      
       it "when given string as it's only argument, should send a notification using the string as title" do
         notification = @notifier.notify("My custom message")
         notification.title.should == "My custom message"
@@ -55,10 +63,15 @@ describe Failurous::FailNotifier do
         notification.should have_section(:summary)
       end
       
+      it "when the last argument is an object, should build the notification using the details from the object" do
+        @notifier.notify("My custom title", self).should have_section(:object)
+        @notifier.notify("My custom title", mock_exception(RuntimeError), self).should have_section(:object)
+        @notifier.notify("My custom title").should_not have_section(:object)
+        @notifier.notify("My custom title", mock_exception(RuntimeError)).should_not have_section(:object)
+      end
+      
       it "should build the notification using the custom notification class, if specified" do
-        @config.custom_notification = MyFailNotification
         @notifier.notify("My custom title").should be_a(MyFailNotification)
-        @config.custom_notification = nil
       end
     end
     
@@ -67,5 +80,7 @@ describe Failurous::FailNotifier do
 end
 
 class MyFailNotification < Failurous::FailNotification
-  
+  def fill_from_object(object)
+    self.add_field(:object, :type, "Test")
+  end
 end
