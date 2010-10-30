@@ -16,6 +16,7 @@ describe Failurous::FailNotifier do
     @notifier = Failurous::FailNotifier.new(@config, @http)
   end
   
+  
   describe "#notify" do
     before(:each) do
       @notification = Failurous::FailNotification.new("My own notification")  
@@ -35,5 +36,25 @@ describe Failurous::FailNotifier do
     it "should return the notification it sent" do
       @notifier.notify(@notification).should == @notification
     end
+    
+    context "shorthands" do
+      it "when given string as it's only argument, should send a notification using the string as title" do
+        notification = @notifier.notify("My custom message")
+        notification.title.should == "My custom message"
+      end
+      
+      it "when given exception as it's only argument, should send a notification built from the exception" do
+        notification = @notifier.notify(mock_exception(RuntimeError))
+        notification.should have_section(:summary)
+      end
+      
+      it "when given string and exception as arguments, should send a notification built from the exception, using the string as title" do
+        notification = @notifier.notify("My custom title", mock_exception(RuntimeError))
+        notification.title.should == "My custom title"
+        notification.should have_section(:summary)
+      end
+    end
+    
   end
+  
 end
