@@ -50,11 +50,13 @@ module Failurous
     private
     
       def create_notification(args, original_caller)
+        notification_klass = @config.custom_notification || FailNotification
+        
         notification = case identify_args(args)
           when :notification then args[0]
-          when :exception then FailNotification.new(nil, args[0])
-          when :exception_with_message then FailNotification.new(args[0], args[1])
-          when :message then FailNotification.new(args[0])
+          when :exception then notification_klass.new(nil, args[0])
+          when :exception_with_message then notification_klass.new(args[0], args[1])
+          when :message then notification_klass.new(args[0])
         end
         
         if identify_args(args) == :message

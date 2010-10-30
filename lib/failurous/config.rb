@@ -19,6 +19,8 @@ module Failurous
     # Logger instance for logging errors 
     attr_accessor :logger
     
+    # Name of the custom notification class. If not specified, {FailNotification} will be used
+    attr_accessor :custom_notification
     
     def initialize
       @server_port  = 80

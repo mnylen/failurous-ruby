@@ -37,6 +37,7 @@ describe Failurous::FailNotifier do
       @notifier.notify(@notification).should == @notification
     end
     
+    
     context "shorthands" do
       it "when given string as it's only argument, should send a notification using the string as title" do
         notification = @notifier.notify("My custom message")
@@ -53,8 +54,18 @@ describe Failurous::FailNotifier do
         notification.title.should == "My custom title"
         notification.should have_section(:summary)
       end
+      
+      it "should build the notification using the custom notification class, if specified" do
+        @config.custom_notification = MyFailNotification
+        @notifier.notify("My custom title").should be_a(MyFailNotification)
+        @config.custom_notification = nil
+      end
     end
     
   end
+  
+end
+
+class MyFailNotification < Failurous::FailNotification
   
 end
