@@ -7,9 +7,6 @@ module Failurous
   # FailNotifier is used for notifying Failurous about fails.
   #
   # To send a notification, use the {#notify} method.
-  #
-  # You can use {Failurous.notify} directly as a class level method once the notifier has been
-  # configured with {Failurous.configure}
   class FailNotifier
     class << self
       # Notifier configured with {.configure}
@@ -43,7 +40,26 @@ module Failurous
     #
     # You can optionally append the object at the end of argument list to fill the notification
     # details using information available from the object.
+    # 
+    # == Usage examples:
+    #  notifier.notify(FailNotification.new(...))
+    # sends the notification passed as an argument
     #
+    #  notifier.notify("Something horrible happened!")
+    # sends a notification with title _Something_ _horrible_ _happened!_
+    #
+    #  begin
+    #    raise 'hell'
+    #  rescue => ex
+    #    notifier.notify("ALL HELL HAS BROKEN LOSE", ex)
+    #    # or notifier.notify(ex) for the default title
+    #  end
+    # sends a notification with title _ALL_ _HELL_ _HAS_ _BROKEN_ _LOSE_, which is filled
+    # with details from the exception.
+    #
+    #  notifier.notify("Something weeeeeird is going on", self)
+    # sends a notification with title _Something_ _weeeeeird_ _is_ _going_ _on_, with information
+    # available from the calling object.
     # @see FailNotification#initialize
     def notify(*notification)
       notify_with_caller(notification, caller[0])
