@@ -25,6 +25,7 @@ module Failurous
         @http = ::Net::HTTP.new(config.server_name, config.server_port)
         @http.use_ssl = config.use_ssl
         @http.open_timeout = config.send_timeout
+        @http.read_timeout = config.send_timeout
       else
         @http = http
       end
@@ -103,9 +104,15 @@ module Failurous
         @http.post(@path, notification.attributes.to_json)
         
         notification
-      rescue
+      rescue Timeout::Error => ex
+        log_error(ex) # Timeout:Error doesn't derive from StandardError...
+      rescue => ex
+        log_error(ex)
+      end
+      
+      def log_error(ex)
         if @config.logger
-          @config.logger.warn("Could not send FailNotification to Failurous: #{$!.class}: #{$!.message}")
+          @config.logger.warn("Could not send FailNotification to Failurous: #{ex.class}: #{ex.message}")
         end
       end
   end
