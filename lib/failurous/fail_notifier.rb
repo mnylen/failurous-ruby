@@ -20,17 +20,8 @@ module Failurous
     # @param http [Net::HTTP] preconfigured HTTP instance for sending notifications
     def initialize(config, http = nil)
       @config = config
-      
-      unless http
-        @http = ::Net::HTTP.new(config.server_name, config.server_port)
-        @http.use_ssl = config.use_ssl
-        @http.open_timeout = config.send_timeout
-        @http.read_timeout = config.send_timeout
-      else
-        @http = http
-      end
-      
-      @path = "/api/projects/#{config.api_key}/fails"
+      @http   = http ? http : create_http_from_config(config)
+      @path   = "/api/projects/#{config.api_key}/fails"
     end
     
     # Sends a notification. The notification can be either:
@@ -114,6 +105,15 @@ module Failurous
         if @config.logger
           @config.logger.warn("Could not send FailNotification to Failurous: #{ex.class}: #{ex.message}")
         end
+      end
+      
+      def create_http_from_config(config)
+        http = ::Net::HTTP.new(config.server_name, config.server_port)
+        http.use_ssl = config.use_ssl
+        http.open_timeout = config.send_timeout
+        http.read_timeout = config.send_timeout
+        
+        http
       end
   end
 end
