@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mikko Nyl\303\251n", "Tero Parviainen", "Antti Forsell"]
-  s.date = %q{2010-10-27}
+  s.date = %q{2010-11-02}
   s.description = %q{failurous-ruby is a Ruby notifier for sending notifications to Failurous}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
     ".gitignore",
      "LICENSE",
      "README.md",
+     "Rakefile",
      "VERSION",
      "doc/Failurous.html",
      "doc/Failurous/Config.html",
@@ -38,12 +39,14 @@ Gem::Specification.new do |s|
      "doc/js/jquery.js",
      "doc/method_list.html",
      "doc/top-level-namespace.html",
+     "failurous-ruby.gemspec",
      "lib/failurous.rb",
      "lib/failurous/config.rb",
      "lib/failurous/fail_notification.rb",
      "lib/failurous/fail_notifier.rb",
      "spec/fail_notification_spec.rb",
      "spec/fail_notifier_spec.rb",
+     "spec/failurous_spec.rb",
      "spec/spec_helper.rb",
      "spec/support/matchers/have_field.rb",
      "spec/support/matchers/have_section.rb"
@@ -56,6 +59,7 @@ Gem::Specification.new do |s|
   s.test_files = [
     "spec/fail_notification_spec.rb",
      "spec/fail_notifier_spec.rb",
+     "spec/failurous_spec.rb",
      "spec/spec_helper.rb",
      "spec/support/matchers/have_field.rb",
      "spec/support/matchers/have_section.rb"
