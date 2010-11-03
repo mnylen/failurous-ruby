@@ -18,9 +18,9 @@ describe Failurous do
       lambda { Failurous.notify("test") }.should raise_exception(RuntimeError)
     end
     
-    it "should call #notify on the configured FailNotifier instance" do
+    it "should call #notify_with_caller on the configured FailNotifier instance" do
       do_configure
-      Failurous::FailNotifier.notifier.should_receive(:notify)
+      Failurous::FailNotifier.notifier.should_receive(:notify_with_caller)
       Failurous.notify("Test")
     end
   end
