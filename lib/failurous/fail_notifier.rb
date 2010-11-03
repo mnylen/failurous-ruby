@@ -13,6 +13,9 @@ module Failurous
       attr_accessor :notifier
     end
     
+    # Configuration for this FailNotifier
+    attr_accessor :config
+    
     # Initializes the notifier with the specified configuration.
     # Optionally takes preconfigured {Net::HTTP} instance for sending notifications.
     #
