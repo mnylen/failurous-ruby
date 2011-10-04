@@ -22,10 +22,18 @@ module Failurous
     # Name of the custom notification class. If not specified, {FailNotification} will be used
     attr_accessor :custom_notification
     
+    # CA file
+    attr_accessor :https_ca_file
+    
+    # Verify mode
+    attr_accessor :https_verify_mode
+    
     def initialize
-      @server_port  = 80
-      @use_ssl      = false
-      @send_timeout = 2
+      @server_port       = 80
+      @use_ssl           = false
+      @send_timeout      = 2
+      @https_ca_file     = nil
+      @https_verify_mode = nil
     end
   end
 end

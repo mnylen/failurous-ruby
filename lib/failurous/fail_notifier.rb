@@ -116,6 +116,14 @@ module Failurous
         http.open_timeout = config.send_timeout
         http.read_timeout = config.send_timeout
         
+        if config.https_ca_file
+          http.ca_file = config.https_ca_file
+        end
+        
+        if config.https_verify_mode
+          http.verify_mode = config.https_verify_mode
+        end
+        
         http
       end
   end

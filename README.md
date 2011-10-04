@@ -31,6 +31,8 @@ You can also configure the following obligatory options:
 * *use_ssl* - set to _true_ to encrypt notifications using SSL (defaults to _false_)
 * *send_timeout* - when Failurous server is slow to respond, this determines how long, in seconds, the notifier should wait before timing out (defaults to _2_)
 * *logger* - in case the notifications could not be sent, the logger is used to log the reason (by default, no logger is used)
+* *https_verify_mode* - the verify mode to use when *use_ssl* is set to `true` (see `Net::HTTP#verify_mode=`, defaults to `nil` which uses the `Net::HTTP` defaults)
+* *https_ca_file* - the CA file to use  when *use_ssl* is set to `true` (passed to `Net::HTTPS#ca_file=`, defaults to `nil` which uses the `Net::HTTP` defaults)
 
 ## Usage
 

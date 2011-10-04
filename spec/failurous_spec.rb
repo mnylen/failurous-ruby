@@ -28,9 +28,11 @@ describe Failurous do
   
   def do_configure
     Failurous.configure do |config|
-      config.server_name = "localhost"
-      config.server_port = 3000
-      config.api_key     = "api key"
+      config.server_name       = "localhost"
+      config.server_port       = 3000
+      config.api_key           = "api key"
+      config.https_verify_mode = ::OpenSSL::SSL::VERIFY_NONE
+      config.https_ca_file     = "/some/file.ca"
     end
   end
 end
